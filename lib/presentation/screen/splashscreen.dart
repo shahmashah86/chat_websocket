@@ -1,8 +1,6 @@
-import 'dart:async';
-import 'dart:math' as math;
-
 import 'package:chat_websocket/presentation/screen/homescreen.dart';
 import 'package:flutter/material.dart';
+import 'package:swipeable_button_view/swipeable_button_view.dart';
 
 class Splashscreen extends StatefulWidget {
   const Splashscreen({super.key});
@@ -14,17 +12,7 @@ class Splashscreen extends StatefulWidget {
 class _SplashscreenState extends State<Splashscreen>
     with SingleTickerProviderStateMixin {
   late AnimationController controller;
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   // Initialize the animation controller
-  //   controller = AnimationController(
-  //     duration: const Duration(seconds: 2),
-  //     vsync: this,
-  //   )..repeat();
-  //   Timer(Duration(seconds: 3), controller.stop); // Repeat the animation indefinitely
-  // }
+  bool isfinished = false;
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +27,8 @@ class _SplashscreenState extends State<Splashscreen>
           child: RotationTransition(
               turns: AlwaysStoppedAnimation(15 / 360),
               child: Text("✉️",
-                  style: TextStyle(color:  Colors.indigo.shade100,
+                  style: TextStyle(
+                    color: Colors.indigo.shade100,
                     fontSize: 40,
                   ))),
         ),
@@ -62,7 +51,11 @@ class _SplashscreenState extends State<Splashscreen>
               Padding(
                 padding: const EdgeInsets.only(left: 2, top: 3),
                 child: Container(
-                  decoration: BoxDecoration(image: DecorationImage(image: AssetImage('C:/FLUTTER/networking/chat_websocket/assets/persondp2.jpg'),fit: BoxFit.cover),
+                  decoration: BoxDecoration(
+                      image: DecorationImage(
+                          image: AssetImage(
+                              'C:/FLUTTER/networking/chat_websocket/assets/persondp2.jpg'),
+                          fit: BoxFit.cover),
                       color: Colors.yellow,
                       borderRadius: BorderRadius.only(
                           topRight: Radius.circular(10),
@@ -253,20 +246,43 @@ class _SplashscreenState extends State<Splashscreen>
               fontSize: 45, color: Colors.white, fontWeight: FontWeight.w500),
         ),
         SizedBox(height: MediaQuery.sizeOf(context).height * 0.14),
-        Align(
-            alignment: Alignment.bottomRight,
-            child: Container(
-              child: IconButton(
-                onPressed: () {
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (context) {
-                    return Homescreen();
-                  }));
-                },
-                icon: Icon(Icons.arrow_forward),
-                color: Colors.white,
-              ),
-            ))
+        SwipeableButtonView(
+          isFinished: isfinished,
+            onFinish: () {
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) {
+                return Homescreen();
+              }));
+            },
+            onWaitingProcess: () {
+              Future.delayed(Duration(milliseconds: 2));
+              setState(() {
+                
+                isfinished=true;
+              });
+             
+            },
+            activeColor: Colors.indigo,
+            buttonWidget: Container(
+              height: 30,
+              width: double.infinity,
+              // color: Colors.indigo.shade100,
+            ),
+            buttonText: "swipe to chat")
+        // Align(
+        //     alignment: Alignment.bottomRight,
+        //     child:
+        //     IconButton(
+        //         onPressed: () {
+        //           Navigator.pushReplacement(context,
+        //               MaterialPageRoute(builder: (context) {
+        //             return Homescreen();
+        //           }));
+        //         },
+        //         icon: Icon(Icons.arrow_forward),
+        //         color: Colors.white,
+        //       ),
+        //     )
       ]),
     );
   }
